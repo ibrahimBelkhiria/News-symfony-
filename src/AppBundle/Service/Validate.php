@@ -8,7 +8,6 @@
 
 namespace AppBundle\Service;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -24,9 +23,9 @@ class Validate
     }
 
 
-    public function validateRequest($news)
+    public function validateRequest($data)
     {
-        $errors = $this->validator->validate($news);
+        $errors = $this->validator->validate($data);
 
         $errorsResponse = array();
 
@@ -39,24 +38,34 @@ class Validate
         }
 
 
-        if (!empty($errors))
+        if (count($errors))
         {
 
             $reponse=array(
 
                 'code'=>1,
-                'message'=>'validation errors',
-                'errors'=>$errorsResponse,
-                'result'=>null
+               'message'=>'validation errors',
+                 'errors'=>$errorsResponse,
+                   'result'=>null
+                         );
 
-            );
+            return $reponse;
+        }else{
 
-            return  $reponse;
+            $reponse=[];
+            return $reponse;
+
+
+
+
         }
 
-        return true;
-
     }
+
+
+
+
+
 
 
 

@@ -3,9 +3,6 @@
 
 namespace AppBundle\Controller\Api;
 
-
-use AppBundle\Entity\News;
-use AppBundle\Form\NewsType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -68,12 +65,13 @@ class NewsController  extends Controller
 
 
              $reponse=$validate->validateRequest($news);
+             //dump($reponse);die();
 
-             if ($reponse){
+             if (!empty($reponse)){
                  return new JsonResponse($reponse, Response::HTTP_BAD_REQUEST);
              }
 
-           //dump($reponse);die();
+
 
            $em=$this->getDoctrine()->getManager();
            $em->persist($news);
@@ -143,7 +141,6 @@ class NewsController  extends Controller
 
               );
 
-
               return new JsonResponse($response, Response::HTTP_NOT_FOUND);
           }
 
@@ -153,26 +150,29 @@ class NewsController  extends Controller
           $data=$this->get('jms_serializer')->deserialize($body,'AppBundle\Entity\News','json');
 
 
-          $reponse=$validate->validateRequest($data);
+            $reponse= $validate->validateRequest($data);
 
-          if ($reponse)
-          {
-              return new JsonResponse($reponse, Response::HTTP_BAD_REQUEST);
-          }
+           if (!empty($reponse))
+           {
+                      return new JsonResponse($reponse, Response::HTTP_BAD_REQUEST);
 
-
+           }
 
               $news->setTitle($data->getTitle());
               $news->setDescription($data->getDescription());
 
-                  $em=$this->getDoctrine()->getManager();
-                  $em->persist($news);
-                  $em->flush();
+              $em=$this->getDoctrine()->getManager();
+              $em->persist($news);
+              $em->flush();
 
-                  return new Response('',200);
+              return new Response('',200);
 
 
-      }
+
+
+
+
+        }
 
 
 
