@@ -28,7 +28,9 @@ class News
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=50)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Please enter a title")
+     * @Assert\Type("string",message="title must be a string")
+     * @Assert\Regex("/\S+/",message="add some characters")
      * @Serializer\Expose()
      */
     private $title;
@@ -37,7 +39,10 @@ class News
      * @var string
      *
      * @ORM\Column(name="description", type="text")
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Please enter a description")
+     * @Assert\Type("string",message="title must be a string")
+     *  @Assert\Regex("/^\w+/")
+     * @Assert\Regex("/\S+/")
      * @Serializer\Expose()
      */
     private $description;

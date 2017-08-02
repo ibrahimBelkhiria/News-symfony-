@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Service\Validate;
 
 class NewsController  extends Controller
 {
@@ -26,15 +27,30 @@ class NewsController  extends Controller
            $news=$this->getDoctrine()->getRepository('AppBundle:News')->find($id);
 
            if (empty($news)) {
-               return new JsonResponse(['message' => 'Place not found'], Response::HTTP_NOT_FOUND);
+               $response=array(
+
+                   'code'=>1,
+                   'message'=>'News Not found !',
+                   'errors'=>null,
+                   'result'=>null
+
+               );
+
+
+               return new JsonResponse($response, Response::HTTP_NOT_FOUND);
            }
 
            $data=$this->get('jms_serializer')->serialize($news,'json');
+           $response=array(
 
-           $response=new Response($data);
-           $response->headers->set('Content-Type','application/json');
+               'code'=>0,
+               'message'=>'success',
+               'errors'=>null,
+               'result'=>json_decode($data)
 
-           return $response;
+           );
+
+           return new JsonResponse($response,200);
 
        }
 
@@ -43,20 +59,21 @@ class NewsController  extends Controller
      * @Route("/news",name="news_create")
      * @Method({"POST"})
      */
-       public function createNewsAction(Request $request)
+       public function createNewsAction(Request $request,Validate $validate)
        {
 
            $data=$request->getContent();
 
            $news=$this->get('jms_serializer')->deserialize($data,'AppBundle\Entity\News','json');
 
-           $errors = $this->get('validator')->validate($news);
 
-           if (count($errors)) {
-               return new Response($errors, Response::HTTP_BAD_REQUEST);
-           }
+             $reponse=$validate->validateRequest($news);
 
+             if ($reponse){
+                 return new JsonResponse($reponse, Response::HTTP_BAD_REQUEST);
+             }
 
+           //dump($reponse);die();
 
            $em=$this->getDoctrine()->getManager();
            $em->persist($news);
@@ -77,15 +94,32 @@ class NewsController  extends Controller
            $news=$this->getDoctrine()->getRepository('AppBundle:News')->findAll();
 
             if (!count($news)){
-                throw $this->createNotFoundException('There is no news yet!');
+                $response=array(
+
+                    'code'=>1,
+                    'message'=>'No news found!',
+                    'errors'=>null,
+                    'result'=>null
+
+                );
+
+
+                return new JsonResponse($response, Response::HTTP_NOT_FOUND);
             }
 
 
            $data=$this->get('jms_serializer')->serialize($news,'json');
 
-           $response=new Response($data);
-           $response->headers->set('Content-Type', 'application/json');
-           return $response;
+           $response=array(
+
+               'code'=>0,
+               'message'=>'success',
+               'errors'=>null,
+               'result'=>json_decode($data)
+
+           );
+
+           return new JsonResponse($response,200);
 
 
        }
@@ -94,19 +128,38 @@ class NewsController  extends Controller
      * @Route("/news/{id}",name="update_news")
      * @Method({"PUT"})
      */
-        public function updateNewsAction($id,Request $request)
+        public function updateNewsAction($id,Request $request,Validate $validate)
       {
            $news=$this->getDoctrine()->getRepository('AppBundle:News')->find($id);
 
           if (empty($news))
           {
-              return new JsonResponse(['message' => 'Place not found'], Response::HTTP_NOT_FOUND);
+              $response=array(
+
+                  'code'=>1,
+                  'message'=>'News Not found !',
+                  'errors'=>null,
+                  'result'=>null
+
+              );
+
+
+              return new JsonResponse($response, Response::HTTP_NOT_FOUND);
           }
 
           $body=$request->getContent();
 
 
           $data=$this->get('jms_serializer')->deserialize($body,'AppBundle\Entity\News','json');
+
+
+          $reponse=$validate->validateRequest($data);
+
+          if ($reponse)
+          {
+              return new JsonResponse($reponse, Response::HTTP_BAD_REQUEST);
+          }
+
 
 
               $news->setTitle($data->getTitle());
@@ -146,6 +199,8 @@ class NewsController  extends Controller
 
 
        }
+
+
 
 
 
