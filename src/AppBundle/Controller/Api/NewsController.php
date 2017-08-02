@@ -165,10 +165,7 @@ class NewsController  extends Controller
               $em->persist($news);
               $em->flush();
 
-              return new Response('',200);
-
-
-
+              return new Response('',200,['Content-Type'=>'application/json']);
 
 
 
@@ -187,7 +184,7 @@ class NewsController  extends Controller
            $news=$this->getDoctrine()->getRepository('AppBundle:News')->find($id);
 
            if (empty($news)) {
-               return new JsonResponse(['message' => 'Place not found'], Response::HTTP_NOT_FOUND);
+               return new JsonResponse(['message' => 'News not found'], Response::HTTP_NOT_FOUND);
            }
 
            $em=$this->getDoctrine()->getManager();
@@ -195,7 +192,7 @@ class NewsController  extends Controller
            $em->flush();
 
 
-           return new Response('',200);
+           return new Response('',200,['Content-Type'=>'application/json']);
 
 
        }
