@@ -8,18 +8,27 @@
 
 namespace AppBundle\Service;
 
+use Doctrine\ORM\EntityManager;
+
+
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-
+use Doctrine\Bundle\DoctrineBundle\Registry;
 class Validate
 {
 
     private $validator;
-    public function __construct(ValidatorInterface $validator)
+
+    private $em;
+    /**
+     * Validate constructor.
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(ValidatorInterface $validator,Registry $registry)
     {
         $this->validator=$validator;
-
+        $this->em=$registry;
     }
 
 
@@ -61,6 +70,10 @@ class Validate
         }
 
     }
+
+
+
+
 
 
 

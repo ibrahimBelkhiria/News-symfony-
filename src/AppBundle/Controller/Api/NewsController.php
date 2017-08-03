@@ -104,7 +104,20 @@ class NewsController  extends Controller
            $em->flush();
 
 
-            return new Response('',Response::HTTP_CREATED,['Content-type'=>'application/json']);
+           $response=array(
+
+               'code'=>0,
+               'message'=>'News created!',
+               'errors'=>null,
+               'result'=>null
+
+           );
+
+
+
+
+
+           return new JsonResponse($response,Response::HTTP_CREATED);
 
        }
 
@@ -209,7 +222,16 @@ class NewsController  extends Controller
               $em->persist($news);
               $em->flush();
 
-              return new Response('',200,['Content-Type'=>'application/json']);
+          $response=array(
+
+              'code'=>0,
+              'message'=>'News updated!',
+              'errors'=>null,
+              'result'=>null
+
+          );
+
+              return new JsonResponse($response,200);
 
 
 
@@ -255,9 +277,17 @@ class NewsController  extends Controller
            $em=$this->getDoctrine()->getManager();
            $em->remove($news);
            $em->flush();
+           $response=array(
+
+               'code'=>0,
+               'message'=>'News deleted !',
+               'errors'=>null,
+               'result'=>null
+
+           );
 
 
-           return new Response('',200,['Content-Type'=>'application/json']);
+           return new JsonResponse($response,200);
 
 
        }
