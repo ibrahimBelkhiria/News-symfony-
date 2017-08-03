@@ -10,11 +10,24 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Service\Validate;
-
+use Nelmio\ApiDocBundle\Annotation as Doc;
 class NewsController  extends Controller
 {
 
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Get one single news",
+     *     requirements={
+     *         {
+     *             "name"="id",
+     *             "dataType"="integer",
+     *             "requirements"="\d+",
+     *             "description"="The news unique identifier."
+     *         }
+     *     },
+     *     section="news"
+     * )
      * @Route("/news/{id}",name="news_show")
      * @Method({"GET"})
      */
@@ -53,6 +66,19 @@ class NewsController  extends Controller
 
 
     /**
+     * @Doc\ApiDoc(
+     *    description="Create a new news",
+     *    input={"class"=NewsType::class},
+     *    statusCodes = {
+     *        201 = "Creation with success",
+     *        400 = "invalid form"
+     *    },
+     *    responseMap={
+     *         201 = {"class"=News::class},
+     *         400 = { "class"=NewsType::class, "form_errors"=true}
+     *    },
+     *     section="news"
+     * )
      * @Route("/news",name="news_create")
      * @Method({"POST"})
      */
@@ -84,6 +110,11 @@ class NewsController  extends Controller
 
 
     /**
+     * @Doc\ApiDoc(
+     *     resource=true,
+     *     description="Get the list of all news.",
+     *     section="news"
+     * )
      * @Route("/news",name="list_news")
      * @Method({"GET"})
      */
@@ -123,6 +154,19 @@ class NewsController  extends Controller
        }
 
     /**
+     *@Doc\ApiDoc(
+     *         description="update a specific news",
+     *    input={"class"=NewsType::class},
+     *    statusCodes = {
+     *        200 = "update with success",
+     *        400 = "invalid form",
+     *         404="news not found"
+     *    },
+     *     section="news"
+     *)
+     *
+     *
+     *
      * @Route("/news/{id}",name="update_news")
      * @Method({"PUT"})
      */
@@ -175,6 +219,16 @@ class NewsController  extends Controller
 
 
         /**
+         *
+         * @Doc\ApiDoc(
+         *     statusCodes={
+         *                    200="news deleted with success",
+         *                     404="news not found"
+         *                       },
+         *     section="news"
+         *
+         * )
+         *
          * @Route("/news/{id}",name="delete_news")
          * @Method({"DELETE"})
          */
@@ -184,7 +238,18 @@ class NewsController  extends Controller
            $news=$this->getDoctrine()->getRepository('AppBundle:News')->find($id);
 
            if (empty($news)) {
-               return new JsonResponse(['message' => 'News not found'], Response::HTTP_NOT_FOUND);
+
+               $response=array(
+
+                   'code'=>1,
+                   'message'=>'News Not found !',
+                   'errors'=>null,
+                   'result'=>null
+
+               );
+
+
+               return new JsonResponse($response, Response::HTTP_NOT_FOUND);
            }
 
            $em=$this->getDoctrine()->getManager();
@@ -196,13 +261,6 @@ class NewsController  extends Controller
 
 
        }
-
-
-
-
-
-
-
 
 
 
