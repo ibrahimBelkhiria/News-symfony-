@@ -6,10 +6,12 @@ app_api:
     resource: '@AppBundle/Controller/Api'
     type: annotation
 
+api_login_check:
+    path: /api/login_check
 
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
     prefix:   /api/doc
 
-api_login_check:
-    path: /api/login_check
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"

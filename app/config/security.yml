@@ -1,34 +1,20 @@
-# To get started with security, check out the documentation:
-# http://symfony.com/doc/current/security.html
+
 security:
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
 
 
-
-    #role_hierarchy:
-     #       ROLE_READER: ROLE_USER
-      #      ROLE_ADMIN: ROLE_READER
-    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
-            fos_userbundle:
-                id: fos_user.user_provider.username
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
 
     firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
+
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
-            anonymous: ~
-            # activate different ways to authenticate
-
-            # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-            #http_basic: ~
-
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
-            #form_login: ~
 
         login:
             pattern:  ^/api/login
@@ -36,6 +22,8 @@ security:
             anonymous: true
             form_login:
                 check_path:               /api/login_check
+                username_parameter: username
+                password_parameter: password
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
                 require_previous_session: false
@@ -43,9 +31,14 @@ security:
         api:
             pattern:   ^/api
             stateless: true
+            provider:  fos_userbundle
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
+
+
+        main:
+            anonymous: ~
 
 
     access_control:
