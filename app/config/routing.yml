@@ -10,3 +10,6 @@ app_api:
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
     prefix:   /api/doc
+
+api_login_check:
+    path: /api/login_check

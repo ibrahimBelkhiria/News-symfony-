@@ -19,7 +19,7 @@ class NewsControllerTest extends TestCase
 
     public function setUp()
     {
-        $this->client=new Client(['base_uri'=>'http://127.0.0.1:8000']);
+        $this->client=new Client(['base_uri'=>'http://127.0.0.1:8000/api']);
     }
 
 
@@ -89,6 +89,9 @@ class NewsControllerTest extends TestCase
 
 
     }
+
+
+
 
 
 

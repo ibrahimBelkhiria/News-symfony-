@@ -11,6 +11,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Service\Validate;
 use Nelmio\ApiDocBundle\Annotation as Doc;
+
+
+/**
+ * Class NewsController
+ * @package AppBundle\Controller\Api
+ *
+ */
+
+
 class NewsController  extends Controller
 {
 
@@ -28,7 +37,7 @@ class NewsController  extends Controller
      *     },
      *     section="news"
      * )
-     * @Route("/news/{id}",name="news_show")
+     * @Route("/api/news/{id}",name="news_show")
      * @Method({"GET"})
      */
 
@@ -79,7 +88,7 @@ class NewsController  extends Controller
      *    },
      *     section="news"
      * )
-     * @Route("/news",name="news_create")
+     * @Route("/api/news",name="news_create")
      * @Method({"POST"})
      */
        public function createNewsAction(Request $request,Validate $validate)
@@ -128,7 +137,7 @@ class NewsController  extends Controller
      *     description="Get the list of all news.",
      *     section="news"
      * )
-     * @Route("/news",name="list_news")
+     * @Route("/api/news",name="list_news")
      * @Method({"GET"})
      */
        public function listNewsAction()
@@ -180,7 +189,7 @@ class NewsController  extends Controller
      *
      *
      *
-     * @Route("/news/{id}",name="update_news")
+     * @Route("/api/news/{id}",name="update_news")
      * @Method({"PUT"})
      */
         public function updateNewsAction($id,Request $request,Validate $validate)
@@ -251,7 +260,7 @@ class NewsController  extends Controller
          *
          * )
          *
-         * @Route("/news/{id}",name="delete_news")
+         * @Route("/api/news/{id}",name="delete_news")
          * @Method({"DELETE"})
          */
        public function deleteNewsAction($id)
